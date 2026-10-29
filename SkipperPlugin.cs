@@ -10,7 +10,8 @@ using UnityEngine;
 
 namespace Terkoiz.Skipper
 {
-    [BepInPlugin("com.terkoiz.skipper", "Terkoiz.Skipper", "1.1.5")]
+    [BepInPlugin("com.terkoiz.skipper", "Terkoiz.Skipper", "1.2.0")]
+    [BepInDependency("com.sptushonka.core", "5.0.0")]
     public class SkipperPlugin : BasePlugin
     {
         internal const string SkipButtonName = "SkipButton";
@@ -110,13 +111,13 @@ namespace Terkoiz.Skipper
 
             if (SkipperPlugin.DisplayHotkey.Value.IsDown())
             {
-                SkipperPlugin.Logger.LogInfo("[Skipper] Hotkey IsDown -> show");
+                SkipperPlugin.Logger.LogDebug("[Skipper] Hotkey IsDown -> show");
                 ChangeButtonVisibility(true);
             }
 
             if (SkipperPlugin.DisplayHotkey.Value.IsUp())
             {
-                SkipperPlugin.Logger.LogInfo("[Skipper] Hotkey IsUp -> hide");
+                SkipperPlugin.Logger.LogDebug("[Skipper] Hotkey IsUp -> hide");
                 ChangeButtonVisibility(false);
             }
         }
@@ -136,7 +137,7 @@ namespace Terkoiz.Skipper
                 button.gameObject.SetActive(visible);
             }
 
-            SkipperPlugin.Logger.LogInfo(
+            SkipperPlugin.Logger.LogDebug(
                 $"[Skipper] ChangeButtonVisibility({visible}) matched {matched}");
         }
     }

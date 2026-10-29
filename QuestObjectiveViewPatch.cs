@@ -29,49 +29,43 @@ namespace Terkoiz.Skipper
                     typeof(bool),
                     typeof(string)
                 });
-            SkipperPlugin.Logger.LogInfo($"[Skipper] TargetMethod: {m?.ToString() ?? "NULL"}");
+            SkipperPlugin.Logger.LogDebug($"[Skipper] TargetMethod: {m?.ToString() ?? "NULL"}");
             return m;
         }
 
         [HarmonyPostfix]
-        public static void Postfix(QuestObjectiveView __instance, object[] __args)
+        public static void Postfix(QuestObjectiveView __instance, Quest quest, Condition condition, QuestController questController)
         {
-            int argLen = (__args != null) ? __args.Length : -1;
-            SkipperPlugin.Logger.LogInfo($"[Skipper] Postfix fired, args len={argLen}");
-
             try
             {
                 if (!SkipperPlugin.ModEnabled.Value)
                 {
-                    SkipperPlugin.Logger.LogInfo("[Skipper] ModEnabled=false");
+                    SkipperPlugin.Logger.LogDebug("[Skipper] ModEnabled=false");
                     return;
                 }
-
-                if (__args == null || __args.Length < 3)
-                {
-                    SkipperPlugin.Logger.LogInfo("[Skipper] __args too short");
-                    return;
-                }
-
-                var quest = __args[0] as Quest;
-                var condition = __args[1] as Condition;
-                var questController = __args[2] as QuestController;
-
-                SkipperPlugin.Logger.LogInfo(
-                    $"[Skipper] q={quest != null} c={condition != null} ctrl={questController != null}");
 
                 if (quest == null || condition == null || questController == null)
                     return;
 
                 var handoverButton = __instance._handoverButton;
 
-                SkipperPlugin.Logger.LogInfo(
+                SkipperPlugin.Logger.LogDebug(
                     $"[Skipper] handoverButton={(object)handoverButton != null}");
 
                 if (handoverButton == null)
                     return;
 
                 SkipperPlugin.LastSeenObjectivesBlock = __instance.transform.parent.gameObject;
+
+                // Pooled objective rows can be shown repeatedly. Retire this row's previous button.
+                var parent = handoverButton.transform.parent;
+                for (int i = parent.childCount - 1; i >= 0; i--)
+                {
+                    var child = parent.GetChild(i);
+                    if (child.gameObject.name != SkipperPlugin.SkipButtonName) continue;
+                    child.gameObject.SetActive(false);
+                    Object.Destroy(child.gameObject);
+                }
 
                 var skipButton = Object.Instantiate(
                     handoverButton,
@@ -90,7 +84,7 @@ namespace Terkoiz.Skipper
 
                 skipButton.gameObject.SetActive(shouldShow);
 
-                SkipperPlugin.Logger.LogInfo(
+                SkipperPlugin.Logger.LogDebug(
                     $"[Skipper] Skip button created, alwaysDisplay={SkipperPlugin.AlwaysDisplay.Value}, shouldShow={shouldShow}");
 
                 skipButton.OnClick.RemoveAllListeners();
@@ -105,7 +99,7 @@ namespace Terkoiz.Skipper
                             return;
                         }
 
-                        SkipperPlugin.Logger.LogInfo(
+                        SkipperPlugin.Logger.LogDebug(
                             $"[Skipper] Accept: skipping {condition.id}");
 
                         try
