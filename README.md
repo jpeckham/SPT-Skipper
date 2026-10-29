@@ -1,6 +1,8 @@
+> Locked baseline: EFT **1.2.5.0.48146**, SPT 5.0. Newer EFT work must use a separate branch and installation. The original `spt-5.0-48146` branch remains available as historical provenance.
+
 # Skipper — local SPT 5.0 / EFT 48146 port
 
-This branch reuses [huaxianmfs's v1 port](https://github.com/huaxianmfs/SPT-Skipper/tree/v1), commit `cd2d5bb0cef3ee850df72f56e889995f5c3e3a92` (port implementation `654e21c`), preserving its history on top of acidphantasm's `b133f2cb1e2dafea438181508df8846b3fa97330`. Our branch is [jpeckham/spt-5.0-48146](https://github.com/jpeckham/SPT-Skipper/tree/spt-5.0-48146), experimental version **1.2.0**.
+This branch reuses [huaxianmfs's v1 port](https://github.com/huaxianmfs/SPT-Skipper/tree/v1), commit `cd2d5bb0cef3ee850df72f56e889995f5c3e3a92` (port implementation `654e21c`), preserving its history on top of acidphantasm's `b133f2cb1e2dafea438181508df8846b3fa97330`. Our branch is [jpeckham/spt-5.0-eft-1.2.5.0.48146](https://github.com/jpeckham/SPT-Skipper/tree/spt-5.0-eft-1.2.5.0.48146), experimental version **1.2.0**.
 
 We selected the community v1 branch because it retains original trader-objective skipping. The community master branch's later experimental main-story completion/status-forcing logic is not included. Its author reports story-progression risks; this port does not claim to support main-story skipping.
 
@@ -10,7 +12,7 @@ Requires .NET 10 SDK and a working SPT 5.0 / EFT 1.2.5.0.48146 installation with
 
 ```powershell
 dotnet build Terkoiz.Skipper.csproj -c Release `
-  '-p:SPTPath=C:\sptarkov\SPTarkov 5.0.0-local'
+  '-p:SPTPath=C:\sptarkov\SPTarkov 5.0.0-BE-1.2.5.0.48146'
 ```
 
 The build stages `terkoiz-skipper.dll` and `LICENSE` under `Build/BepInEx/plugins/Skipper`. Close the client/server, back up your save and any previous Skipper plugin/config, then copy those two files into the matching folder under your installation. Remove duplicate older Skipper DLLs. Builds do not automatically install. Game/reference assemblies are not distributed. Uninstall by closing the game and removing the plugin DLL; uninstalling does not undo already saved quest progress.
